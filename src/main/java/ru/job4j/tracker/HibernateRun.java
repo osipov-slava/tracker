@@ -27,8 +27,8 @@ public class HibernateRun {
             System.out.println(result);
 
             delete(result.getId(), sf);
-            List<Item> list = findAll(sf);
 
+            List<Item> list = findAll(sf);
             for (Item it : list) {
                 System.out.println(it);
             }
@@ -69,7 +69,7 @@ public class HibernateRun {
     public static List<Item> findAll(SessionFactory sf) {
         Session session = sf.openSession();
         session.beginTransaction();
-        List<Item> result = session.createQuery("from ru.job4j.tracker.Item", Item.class).list();
+        List<Item> result = session.createQuery("from Item", Item.class).list();
         session.getTransaction().commit();
         session.close();
         return result;
