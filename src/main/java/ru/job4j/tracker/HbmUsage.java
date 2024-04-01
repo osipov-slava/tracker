@@ -13,8 +13,10 @@ public class HbmUsage {
                 }
             }
 
-            Item item1 = new Item("item1");
-            Item item2 = new Item("item2");
+            Item item1 = new Item();
+            item1.setName("item1");
+            Item item2 = new Item();
+            item2.setName("item2");
             item1 = hbmTracker.add(item1);
             item2 = hbmTracker.add(item2);
             System.out.println(item1);
