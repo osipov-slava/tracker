@@ -30,7 +30,8 @@ public class HQLUsage {
 
             delete(session, 4);
 
-            Item item = new Item("name");
+            Item item = new Item();
+            item.setName("name");
 
             insert(session, item);
 
