@@ -37,13 +37,13 @@ public class HbmTracker implements Store, AutoCloseable {
         boolean result = false;
         try {
             session.beginTransaction();
-            session.createQuery(
+            var updatedRows = session.createQuery(
                             "UPDATE Item SET name = :name  WHERE id = :id")
                     .setParameter("name", item.getName())
                     .setParameter("id", id)
                     .executeUpdate();
             session.getTransaction().commit();
-            result = true;
+            result = updatedRows != 0;
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
@@ -58,15 +58,13 @@ public class HbmTracker implements Store, AutoCloseable {
         boolean result = false;
         try {
             session.beginTransaction();
-            session.createQuery(
-                            "DELETE Item WHERE id = :id")
+            var deletedRows = session.createQuery("DELETE Item WHERE id = :id")
                     .setParameter("id", id)
                     .executeUpdate();
             session.getTransaction().commit();
-            result = true;
+            result = deletedRows != 0;
         } catch (Exception e) {
             session.getTransaction().rollback();
-
         } finally {
             session.close();
         }
@@ -79,7 +77,9 @@ public class HbmTracker implements Store, AutoCloseable {
         List<Item> userList = Collections.emptyList();
         try {
             session.beginTransaction();
-            var query = session.createQuery("from Item");
+            var query = session.createQuery("""
+                    from Item i
+                    left join fetch i.participates""");
             userList = query.list();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -96,7 +96,10 @@ public class HbmTracker implements Store, AutoCloseable {
         List<Item> itemList = Collections.emptyList();
         try {
             session.beginTransaction();
-            var query = session.createQuery("from Item where name=:name");
+            var query = session.createQuery("""
+                    from Item i
+                    left join fetch i.participates
+                    where i.name=:name""");
             query.setParameter("name", key);
             itemList = query.list();
             session.getTransaction().commit();
